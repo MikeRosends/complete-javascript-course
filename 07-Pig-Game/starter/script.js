@@ -34,7 +34,6 @@ function startNewGame() {
 rollBtnEl.addEventListener('click', rollDice);
 holdBtnEl.addEventListener('click', holdScore);
 // newBtnEl.addEventListener('click', newGame);
-// holdBtnEl.addEventListener('click', holdScore);
 
 // Roll the dice
 function rollDice() {
@@ -99,7 +98,8 @@ function diceRoll(num) {
 }
 
 function holdScore() {
-  document.getElementById(`score--${activePlayer}`).textContent = currentScore;
+  // add current score to the total score
+  document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer] + currentScore;
   currentScore = 0;
   document.getElementById(`current--${activePlayer}`).textContent = currentScore;
 
@@ -108,4 +108,12 @@ function holdScore() {
   } else {
     activePlayer = 0
   }
+}
+
+function newGame() {
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  current0El.textContent = 0;
+  current1El.textContent = 0;
+
 }
