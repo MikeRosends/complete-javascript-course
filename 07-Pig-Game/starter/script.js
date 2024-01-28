@@ -32,13 +32,14 @@ function startNewGame() {
 
 // Add Event Listeners
 rollBtnEl.addEventListener('click', rollDice);
+holdBtnEl.addEventListener('click', holdScore);
 // newBtnEl.addEventListener('click', newGame);
 // holdBtnEl.addEventListener('click', holdScore);
 
 // Roll the dice
 function rollDice() {
   let diceNum = Math.ceil(Math.random() * 6);
-  console.log(diceNum);
+  console.log(`ROLLED A ${diceNum}`);
   switch (diceNum) {
     case 1:
       diceRoll(1);
@@ -69,14 +70,42 @@ function diceRoll(num) {
 
   if (num !== 1) {
     currentScore += num;
-    console.log(`active player: ${activePlayer}`, typeof activePlayer);
+    console.log(`=========PLAYER ${activePlayer}==========`);
     console.log(`current score: ${currentScore}`, typeof currentScore);
+
+    console.log("Before dice roll: " + document.getElementById(`current--${activePlayer}`).textContent);
+    document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+    console.log("After dice roll: " + document.getElementById(`current--${activePlayer}`).textContent);
+
   } else {
-    // diceEl.classList.add('hidden');
+    // Reassigning active player
+    if (activePlayer === 0) {
+      activePlayer = 1
+    } else {
+      activePlayer = 0
+    }
+    
     currentScore = 0;
-    activePlayer = activePlayer === 0 ? 1 : 0; // Reassigning active player
-    console.log(`active player: ${activePlayer}`, typeof activePlayer);
+    document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+
+    console.log(`=========PLAYER ${activePlayer}==========`);
     console.log(`current score: ${currentScore}`, typeof currentScore);
+
+    console.log(document.getElementById(`current--${activePlayer}`).textContent);
+    document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+    console.log(document.getElementById(`current--${activePlayer}`).textContent);
     // player1Section.style.backgroundColor = 'white';
+  }
+}
+
+function holdScore() {
+  document.getElementById(`score--${activePlayer}`).textContent = currentScore;
+  currentScore = 0;
+  document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+
+  if (activePlayer === 0) {
+    activePlayer = 1
+  } else {
+    activePlayer = 0
   }
 }
