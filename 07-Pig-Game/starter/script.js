@@ -1,6 +1,8 @@
 'use strict';
 
 // Sekecting Elements
+const player0Elm = document.querySelector('.player--0');
+const player1Elm = document.querySelector('.player--1');
 const score0El = document.getElementById('score--0');
 const score1El = document.getElementById('score--1');
 const diceEl = document.querySelector('.dice');
@@ -23,6 +25,9 @@ let currentScore = 0;
 // PLAYE SELECTOR
 let activePlayer = 0;
 
+// GAME STATUS
+let playing = true;
+
 // STARTING CONDITIONS
 function startNewGame() {
   score0El.textContent = 0;
@@ -33,33 +38,36 @@ function startNewGame() {
 // Add Event Listeners
 rollBtnEl.addEventListener('click', rollDice);
 holdBtnEl.addEventListener('click', holdScore);
-// newBtnEl.addEventListener('click', newGame);
+newBtnEl.addEventListener('click', newGame);
 
 // Roll the dice
 function rollDice() {
-  let diceNum = Math.ceil(Math.random() * 6);
-  console.log(`ROLLED A ${diceNum}`);
-  switch (diceNum) {
-    case 1:
-      diceRoll(1);
-      break;
-    case 2:
-      diceRoll(2);
-      break;
-    case 3:
-      diceRoll(3);
-      break;
-    case 4:
-      diceRoll(4);
-      break;
-    case 5:
-      diceRoll(5);
-      break;
-    case 6:
-      diceRoll(6);
-      break;
+  if (playing) {
+    diceEl.classList.remove('hidden');
+    let diceNum = Math.ceil(Math.random() * 6);
+    console.log(`ROLLED A ${diceNum}`);
+    switch (diceNum) {
+      case 1:
+        diceRoll(1);
+        break;
+      case 2:
+        diceRoll(2);
+        break;
+      case 3:
+        diceRoll(3);
+        break;
+      case 4:
+        diceRoll(4);
+        break;
+      case 5:
+        diceRoll(5);
+        break;
+      case 6:
+        diceRoll(6);
+        break;
+    }
+    return diceNum;
   }
-  return diceNum;
 }
 
 function diceRoll(num) {
@@ -69,51 +77,64 @@ function diceRoll(num) {
 
   if (num !== 1) {
     currentScore += num;
-    console.log(`=========PLAYER ${activePlayer}==========`);
-    console.log(`current score: ${currentScore}`, typeof currentScore);
 
-    console.log("Before dice roll: " + document.getElementById(`current--${activePlayer}`).textContent);
-    document.getElementById(`current--${activePlayer}`).textContent = currentScore;
-    console.log("After dice roll: " + document.getElementById(`current--${activePlayer}`).textContent);
-
+    document.getElementById(`current--${activePlayer}`).textContent =
+      currentScore;
   } else {
-    // Reassigning active player
-    if (activePlayer === 0) {
-      activePlayer = 1
-    } else {
-      activePlayer = 0
-    }
-    
-    currentScore = 0;
-    document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+    resetAndChangePlayer();
 
-    console.log(`=========PLAYER ${activePlayer}==========`);
-    console.log(`current score: ${currentScore}`, typeof currentScore);
-
-    console.log(document.getElementById(`current--${activePlayer}`).textContent);
-    document.getElementById(`current--${activePlayer}`).textContent = currentScore;
-    console.log(document.getElementById(`current--${activePlayer}`).textContent);
-    // player1Section.style.backgroundColor = 'white';
+    document.getElementById(`current--${activePlayer}`).textContent =
+      currentScore;
   }
 }
 
 function holdScore() {
-  // add current score to the total score
-  document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer] + currentScore;
-  currentScore = 0;
-  document.getElementById(`current--${activePlayer}`).textContent = currentScore;
-
-  if (activePlayer === 0) {
-    activePlayer = 1
-  } else {
-    activePlayer = 0
+  if (playing) {
+    // add current score to the total score of active player
+    scores[activePlayer] += currentScore; // scores[0 or 1] = scores [0 or 1] + currentScore;
+    document.getElementById(`score--${activePlayer}`).textContent =
+      scores[activePlayer];
+    if (scores[activePlayer] >= 100) {
+      diceEl.classList.add('hidden');
+      playing = false;
+      console.log(`PLAYER ${activePlayer} WINSSSS!!!!!!`);
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+    } else {
+      resetAndChangePlayer();
+    }
   }
 }
 
 function newGame() {
-  score0El.textContent = 0;
-  score1El.textContent = 0;
-  current0El.textContent = 0;
-  current1El.textContent = 0;
+  playing = true;
+  document
+    .querySelector(`.player--${activePlayer}`)
+    .classList.remove('player--winner');
+  document
+    .querySelector(`.player--${activePlayer}`)
+    .classList.add('player--active');
+  currentScore = 0;
+  scores[0] = 0;
+  scores[1] = 0;
+  score0El.textContent = scores[0];
+  score1El.textContent = scores[1];
+  current0El.textContent = currentScore;
+  current1El.textContent = currentScore;
+}
 
+function resetAndChangePlayer() {
+  // Reset the current points
+  currentScore = 0;
+  document.getElementById(`current--${activePlayer}`).textContent =
+    currentScore;
+  activePlayer = activePlayer === 0 ? 1 : 0;
+
+  // Ensuring that the css class player--active is only on one element at a time
+  player0Elm.classList.toggle('player--active');
+  player1Elm.classList.toggle('player--active');
 }
