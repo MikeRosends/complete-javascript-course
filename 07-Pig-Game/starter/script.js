@@ -24,7 +24,6 @@ let currentScore = 0;
 
 // PLAYE SELECTOR
 let activePlayer = 0;
-
 // GAME STATUS
 let playing = true;
 

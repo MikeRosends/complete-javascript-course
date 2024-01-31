@@ -2,8 +2,6 @@
 
 let score = 20;
 let highscore = Number(document.querySelector('.highscore').textContent);
-
-
 let secretNum = getRandomNum(1, 20);
 console.log(`Secret Number: ${secretNum}`);
 
