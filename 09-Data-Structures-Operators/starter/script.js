@@ -297,7 +297,58 @@ const restaurant = {
     console.log(`Oreder Recieved! ${this.starterMenu[starterIndex]} and 
     ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}`);
   },
+
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your pasta with ${ing1}, ${ing2} and ${ing3}`);
+  },
 };
+
+//////////////////////
+// Spread Operator (works on all iterables - arrays, strings, maps, sets.NOT objects)
+const arr = [7, 8, 9];
+
+const newArr = [1, 2, ...arr];
+console.log(newArr);
+
+console.log(...newArr); // == console.log(1,2,7,8,9);
+
+const newMenu = [...restaurant.mainMenu, 'Ragu'];
+console.log(newMenu);
+
+// Copy array - "Shallow copy"
+const mainMenuCopy = [...restaurant.mainMenu];
+
+// Join 2 arrays or more...
+const newMainMenu = [...restaurant.starterMenu, ...newMenu];
+console.log(newMainMenu);
+
+// On strings - get all the individual elements
+const str = 'Mike';
+const letters = [...str, '', 'S.'];
+console.log(...str);
+console.log(letters);
+
+// Real world example
+const ingredients = [
+  // prompt("Let's make pasta! Ingredient 1?"),
+  // prompt("Let's make pasta! Ingredient 2?"),
+  // prompt("Let's make pasta! Ingredient 2?"),
+];
+console.log(ingredients);
+restaurant.orderPasta(...ingredients);
+
+// Objects
+const newRestaurant = {...restaurant, founder: 'Mike', foundingYear: '1998'};
+console.log(newRestaurant);
+
+const restaurantCopy = {...restaurant}
+restaurantCopy.name = 'Brand new restaurant'
+console.log(restaurantCopy.name);
+console.log(restaurant.name);
+/* 
+
+//////////////////////
+// Destructuring Objects
 
 restaurant.orderDelivery({
   time: '23:30',
@@ -339,4 +390,6 @@ console.log(a, b);
 const {
   fri: { open: o, close: c },
 } = openingHours;
-console.log(o, c);
+console.log(o, c); */
+
+
