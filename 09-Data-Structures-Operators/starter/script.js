@@ -308,25 +308,25 @@ const restaurant = {
 const arr = [7, 8, 9];
 
 const newArr = [1, 2, ...arr];
-console.log(newArr);
+//console.log(newArr);
 
-console.log(...newArr); // == console.log(1,2,7,8,9);
+//console.log(...newArr); // == console.log(1,2,7,8,9);
 
 const newMenu = [...restaurant.mainMenu, 'Ragu'];
-console.log(newMenu);
+//console.log(newMenu);
 
 // Copy array - "Shallow copy"
 const mainMenuCopy = [...restaurant.mainMenu];
 
 // Join 2 arrays or more...
 const newMainMenu = [...restaurant.starterMenu, ...newMenu];
-console.log(newMainMenu);
+//console.log(newMainMenu);
 
 // On strings - get all the individual elements
 const str = 'Mike';
 const letters = [...str, '', 'S.'];
-console.log(...str);
-console.log(letters);
+//console.log(...str);
+//console.log(letters);
 
 // Real world example
 const ingredients = [
@@ -334,20 +334,23 @@ const ingredients = [
   // prompt("Let's make pasta! Ingredient 2?"),
   // prompt("Let's make pasta! Ingredient 2?"),
 ];
-console.log(ingredients);
+//console.log(ingredients);
 restaurant.orderPasta(...ingredients);
 
 // Objects
-const newRestaurant = {...restaurant, founder: 'Mike', foundingYear: '1998'};
+const newRestaurant = {
+  foundedIn: 1998,
+  ...restaurant,
+  name: 'hyeeaaaaaa',
+  founder: 'Mike',
+};
 console.log(newRestaurant);
 
-const restaurantCopy = {...restaurant}
-restaurantCopy.name = 'Brand new restaurant'
-console.log(restaurantCopy.name);
-console.log(restaurant.name);
-/* 
+const restaurantCopy = { ...restaurant };
+restaurantCopy.name = 'Get outta there pierre';
+console.log(restaurantCopy.name, restaurant.name);
 
-//////////////////////
+/* //////////////////////
 // Destructuring Objects
 
 restaurant.orderDelivery({
@@ -391,5 +394,3 @@ const {
   fri: { open: o, close: c },
 } = openingHours;
 console.log(o, c); */
-
-
