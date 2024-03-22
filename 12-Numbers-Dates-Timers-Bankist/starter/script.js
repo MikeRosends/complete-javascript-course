@@ -94,7 +94,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
 
@@ -104,19 +104,19 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +126,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 const createUsernames = function (accs) {
@@ -164,7 +164,7 @@ btnLogin.addEventListener('click', function (e) {
   );
   console.log(currentAccount);
 
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+  if (currentAccount?.pin === +inputLoginPin.value) {
     // Display UI and message
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
@@ -182,7 +182,7 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
@@ -206,7 +206,7 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
@@ -223,7 +223,7 @@ btnClose.addEventListener('click', function (e) {
 
   if (
     inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    +inputClosePin.value === currentAccount.pin
   ) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
@@ -251,3 +251,125 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+/* 
+console.log(23 === 23.0);
+console.log(0.1 + 0.2);
+
+// turn strings to numbers
+console.log(Number('23'));
+console.log(+'23');
+
+// Parsing - good for reading values comming from CSS
+console.log(Number.parseInt('30px', 10)); // Base 10 - has to start with a number
+console.log(Number.parseInt('e30', 10)); // doesn't work
+
+console.log(Number.parseFloat('2.5rem')); // -> 2.5
+console.log(Number.parseInt('2.5rem')); // -> 2
+
+// IsNaN - Check if value is NaN
+console.log(Number.isNaN(20)); // -> false
+console.log(Number.isNaN('20')); // -> false
+console.log(Number.isNaN(+'20X')); // -> true
+console.log(Number.isNaN(23 / 0)); // -> false    (23 / 0 -> Infinity)
+
+// IsFinite - Check if is number (ULTIMATE METHOD TO CHECK NUMBERS)
+console.log(Number.isFinite(20)); // -> true
+console.log(Number.isFinite('20')); // -> false
+console.log(Number.isFinite(+'20X')); // -> false
+console.log(Number.isFinite(23 / 0)); // -> false
+
+// IsInteger
+console.log(Number.isInteger(20)); // -> true
+console.log(Number.isInteger(20.0)); // -> true
+console.log(Number.isInteger(23 / 0)); // -> false
+ 
+
+// Square Root
+console.log(Math.sqrt(25));
+console.log(25 ** (1 / 2));
+// Cubic Root
+console.log(25 ** (1 / 3));
+
+console.log(Math.max(5, 18, 23, 11, 2));
+console.log(Math.max(5, 18, '23', 11, 2));
+console.log(Math.max(5, 18, '23px', 11, 2)); // -> NaN
+
+console.log(Math.min(5, 18, 23, 11, 2));
+
+// Area of a circle with 10px
+console.log(Math.PI * Number.parseFloat('10px') ** 2);
+
+// Random Number
+console.log(Math.trunc(Math.random() * 6) + 1);
+
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min) + 1) + min;
+console.log(randomInt(40, 45));
+
+// Rounding Integers - Does Type Cohersion
+console.log(Math.trunc('23.3')); // -> 23
+console.log(Math.round(23.9)); // -> 24
+
+console.log(Math.ceil(23.2)); // -> 24
+console.log(Math.ceil('23.9')); // -> 24
+
+console.log(Math.floor(23.9)); // -> 23
+console.log(Math.floor('23.9')); // -> 23
+
+console.log(Math.trunc(-23.3));
+console.log(Math.floor(-23.3)); // -> 24 -> with negative numbers rounding works in reverse
+
+// Rounding Float/Decimals
+console.log((2.7).toFixed(0)); // -> '3'
+console.log((2.7).toFixed(3)); // -> '2.700'
+console.log((2.345).toFixed(2)); // -> '2.35'
+console.log(+(2.345).toFixed(2)); // -> 2.35
+
+
+// Remainder
+console.log(5 % 2);
+
+// Find Even or Odd Numbers
+
+console.log(6 % 2); // -> 0 (even)
+console.log(6 / 2);
+
+console.log(7 % 2); // -> 1 (odd)
+console.log(7 / 2);
+
+const isEven = n => n % 2 === 0;
+
+console.log(isEven(8)); // -> true (even)
+console.log(isEven(23)); // -> false (odd)
+console.log(isEven(513)); // -> false (odd)
+console.log(isEven(514)); // -> true (even)
+
+labelBalance.addEventListener('click', function () {
+  [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
+    // 0,2,4,6,8,...
+    if (i % 2 === 0) row.style.backgroundColor = 'grey';
+    // 0,3,6,9,12,...
+    if(i % 3 === 0) row.style.backgroundColor = 'blue'
+  });
+});
+
+
+// Numeric Seperaters
+const diameter = 287_460_000_000;
+console.log(diameter);
+
+const priceCents = 345_99;
+console.log(priceCents);
+
+const transferFee1 = 15_00;
+const transferFee2 = 1_500;
+
+const PI = 3.1415;
+console.log(PI);
+
+console.log(Number('230_000')); // -> NaN String is not parsed correctly
+console.log(parseInt('230_000')); // -> 230
+*/
+
+
+// BIGINT
